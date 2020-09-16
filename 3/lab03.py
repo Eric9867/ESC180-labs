@@ -30,7 +30,7 @@ def check_sum(n):
 
     # Boolean expression compares the step by step sum with the sum 
     # given by the formula and determines if they match
-    return sum_cubes(n) == n**2 * (n + 1)**2 / 4:
+    return sum_cubes(n) == n**2 * (n + 1)**2 / 4
 
 
 if __name__ == "__main__":
