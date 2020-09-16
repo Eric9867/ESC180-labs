@@ -15,15 +15,11 @@ def add(to_add):
 
 
 ## PROBLEM 4: global
-#NOT FINISHED
-
-# If its not declared as a global variable, you get an error :
-# UnboundLocalError: local variable 'current_value' referenced before assignment
 
 """
-#### NOT FINISHED ####
 Understanding what the global declaration does is understanding how scope
-works in python. By default when defining a variable within a function block
+works in python. 
+By default when defining a variable within a function block
 
 Eg.
 --------------------------
