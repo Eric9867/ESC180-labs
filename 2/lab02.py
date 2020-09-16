@@ -1,5 +1,3 @@
-###### STILL NEEDS COMMENTS ######
-
 ## PROBLEM 2: Displaying the Current Value
 
 def display_current_value():
@@ -14,13 +12,14 @@ def add(to_add):
     log_history()
     current_value += to_add
 
-
 ## PROBLEM 4: global
 
 """
 Understanding what the global declaration does is understanding how scope
 works in python.
-By default when defining a variable within a function block that variable only exists within the function block. So for example we couldnt just call the to_add variable in the add(to_add) function outside of the function block. Another example is given below:
+By default when defining a variable within a function block that variable only exists 
+within the function block. So for example we couldn't access the to_add variable (above) 
+from outside of the function block. Another example is given below:
 
 Eg.
 --------------------------
@@ -34,12 +33,14 @@ def foo():
     print(new_var)
 
 foo()
-print(new_var) <-- this print statement will just print 0 since the foo() only changes the 'new_var' within
-                   the function block.
+print(new_var) <-- this print statement will just print 0 since the foo() only changes 
+                   the 'new_var' within the restricted scope of the function.
 
 --------------------------
 
-Declaring a variable as global within a function gets over this problem. when we specify a variable as global the variable within the function block will this time be referring to the variable with the same name outside of the function block:
+Declaring a variable as global within a function gets over this problem. when we specify 
+a variable as global the variable within the function block will this time be referring to 
+the variable with the same name outside of the function block:
 
 Eg.
 --------------------------
@@ -58,7 +59,6 @@ foo()
 print(new_var) <-- this print statement will now print 6 since 'new_var' has now been declared as a global
                    var in foo so whatever happens to new_var within the function block will happen to the
                    new_var outside of the block since they are now referring to the same variable.
-
 --------------------------
 """
 
@@ -74,7 +74,7 @@ def multiply(scalar):
 
 # for any numerical input denom other than denom = 0, the divide function calls
 # the multiply function using  the reciprocal of the denom input as the new input.
-# A try except statement was used to catch a ZeroDivisionError incase denom = 0,
+# A try except statement was used to catch a ZeroDivisionError in case denom = 0,
 # in which case a message is printed.
 def divide(denom):
     try:
@@ -87,23 +87,33 @@ def divide(denom):
 def to_memory():
     global current_value, memory
     memory = current_value
+    # Saves the current value of the calculator to the 
+    # memory variable to access later
 
 def recall():
     global current_value, memory
     log_history()
     current_value = memory
+    # Replaces the current value of the calculator 
+    # with that which was saved in memory
 
 ## PROBLEM 7: Undo
 
 def log_history():
     global current_value, previous_value
     previous_value = current_value
+    # Immediately before the current value of the calculator is changed, 
+    # this function is called to store the previous value in memory, such 
+    # that the user can, at any time, go one step back to the previous 
+    # "current_value" of the calculator
 
 def undo():
     global current_value, previous_value
     temp = current_value
     current_value = previous_value
     previous_value = temp
+    # Allows the user to return one step behind to the previous value 
+    # that was on the calculator
 
 ## PROBLEM 1: Welcome message
 
