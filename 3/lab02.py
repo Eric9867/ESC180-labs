@@ -121,6 +121,11 @@ current_value = 0
 previous_value = 0
 memory = 0
 
+def initialize():
+    print("Welcome to the calculator program.")
+    print("Current Value:", current_value)
+
+
 
 if __name__ == "__main__":
     print("Welcome to the calculator program.")
