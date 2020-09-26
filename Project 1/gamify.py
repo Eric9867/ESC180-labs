@@ -1,6 +1,18 @@
+##################################
+## TODO : 
+# bored_with_stars logic
+# (probably) separating perform_activity into multiple functions
+
+
+##################################
+
+
+
 def initialize():
-    '''Initializes the global variables needed for the simulation.
-    Note: this function is incomplete, and you may want to modify it'''
+    '''
+    Initializes the global variables needed for the simulation.
+    Note: this function is incomplete, and you may want to modify it
+    '''
     
     global cur_hedons, cur_health
 
@@ -8,7 +20,7 @@ def initialize():
     global last_activity, last_activity_duration
     
     global last_finished
-    global bored_with_stars
+    global bored_with_stars, cur_star, cur_star_activity
     
     cur_hedons = 0
     cur_health = 0
@@ -23,13 +35,15 @@ def initialize():
     
     cur_time = 0
     
-    last_finished = -1000
-    
+    last_finished = 120
 
-            
 
 def star_can_be_taken(activity):
-    pass
+    '''
+    Tests if the user has a star 
+    '''
+    global cur_star, cur_star_activity, bored_with_stars
+    return cur_star and cur_star_activity and not bored_with_stars
 
     
 def perform_activity(activity, duration):
@@ -37,9 +51,9 @@ def perform_activity(activity, duration):
 
     '''
     if not activity in ("running", "textbooks", "resting"):
-        break
+        return None
 
-    global cur_health, cur_hedons, 
+    global cur_health, cur_hedons, cur_time
     global last_activity, last_activity_duration, last_finished
     global cur_star, cur_star_activity
 
@@ -59,6 +73,11 @@ def perform_activity(activity, duration):
 
     if activity == "running":
         if last_activity == activity:
+
+            ############ LOGIC FAULTY : fails when one calls running more than two times in a row
+            # (need to sum the durations before storing in last_activity_duration)
+            
+            
             # Since the user is tired, lose 2 hed / min
             cur_hedons -= duration * 2
 
@@ -84,7 +103,7 @@ def perform_activity(activity, duration):
             elif duration <= 10:
                 cur_hedons += duration * 2
             else:
-                cur_hedons += 20 - (duration - 10) * 2
+                cur_hedons += 40 - 2 * duration
 
             # Running : 
                 # 3 HP / min for up to 180 minutes, 
@@ -118,6 +137,7 @@ def perform_activity(activity, duration):
         last_finished = 0
 
     elif activity == "resting":
+        last_finished += duration
 
 
     cur_time += duration
@@ -140,7 +160,10 @@ def most_fun_activity_minute():
     Returns the activity that, if performed for the next minute, would give the most hedons.
     If user is tired than it is resting, else it is running. 
     '''
-    if last_finished < 120:
+    global last_finished, bored_with_stars, cur_star, cur_star_activity
+    if not bored_with_stars and cur_star:
+        return cur_star_activity
+    elif last_finished < 120:
         return "resting"
     else:
         return "running"
