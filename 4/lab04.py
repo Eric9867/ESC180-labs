@@ -11,6 +11,14 @@ def sum_nums(L):
 ## PROBLEM 1: Writing count_evens(L)
 
 def count_evens(L):
+    '''
+    Returns the number of even integers in a list L.
+    The code loops through the elements (type int) in a
+    list using a for loop for each element an if statement
+    checks if the current integer has a remainder of 0
+    when divided by 2. If so, the local variable num_even
+    is incremented by 1 and after the loop, returned.
+    '''
     num_even = 0
 
     for num in L:
@@ -21,21 +29,28 @@ def count_evens(L):
 ## PROBLEM 2:
 
 def list_to_str(lis):
-    ''' DOC STRING '''
+    ''' Returns a string representation of a list, lis, without using str(lis) '''
 
     string = "["
     for num in lis:
+        # v adds the string representation of the current number
+        # v in the list to the var string
         string += str(num)
         string += ", " if num != lis[-1] else "]"
+        #^ concatanates either a comma or a closing bracket depending
+        #  on if we have reached the final element in the list or not
 
     return string
 
 ## PROBLEM 3:
 
 def lists_are_the_same(list1, list2):
-    # I feel like tge code style could be improved
+    ''' Returns True iff list1 == list2 without directly using the == operator on the lists'''
+
     if len(list1) != len(list2):
         return False
+        # ^ if we know that the lists are not the same size they
+        #   cannot equal one another so we directly return false
 
     for index in range(len(list1)):
         if list1[index] != list2[index]:
@@ -45,16 +60,18 @@ def lists_are_the_same(list1, list2):
 ## PROBLEM 4:
 
 def simplify_fraction(n, m):
+    ''' Returns the new numerator and denominator, the gdc of (n,m) and the number of steps it took to simplify the fraction'''
 
     min_num_checks = math.ceil(min(n,m))
+    num_checks = 0
 
     for div in range(min_num_checks, 0, -1):
+        num_checks += 1
+
         if n % div == 0 and m % div == 0:
-            #print(str(n//div)+"/"+str(m//div))
-
+            print(str(n//div)+"/"+str(m//div))
             #print(simplified_fraction_check(n, m, n/div, m/div))
-
-            return ((n/div), (m/div), div, min_num_checks)
+            return ((n/div), (m/div), div, num_checks)
 
 def simplified_fraction_check(n,m,n_simpl, m_simpl):
     return n/m == n_simpl/m_simpl
@@ -88,7 +105,7 @@ Returns:
     int: returns gdc(a,b) using euclids algorithm
 
 '''
-def euclids_algorithm(a,b, iter = 0):
+def euclids_algorithm(a,b, iter):
     iter += 1
     if a%b == 0:
         return b, iter
@@ -96,8 +113,9 @@ def euclids_algorithm(a,b, iter = 0):
     return euclids_algorithm(b, a%b, iter)
 
 def frac_simplifier(a,b):
-    factor, iter = euclids_algorithm(a,b)
+    factor, iter = euclids_algorithm(a,b,0)
     return a/factor, b/factor, factor, iter
+    # ^ returns the simplified numerator and denominator, gdc(a,b) and the number of steps
 
 
 if __name__ == "__main__":
@@ -107,9 +125,9 @@ if __name__ == "__main__":
     print(count_evens(lst1))
     print(list_to_str(lst1))
     print(lists_are_the_same(lst1,lst2))
-    print(required_num_terms(4),"\n")
+    print("approx: ",required_num_terms(4),"\n")
     a,b = 132409240389000044,2343424
-    #print("Brute force:       ",simplify_fraction(a,b))
+    print("Brute force:       ",simplify_fraction(a,b))
     print("Euclid's Algorithm:",frac_simplifier(a,b))
 
 
