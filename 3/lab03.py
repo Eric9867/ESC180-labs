@@ -85,4 +85,10 @@ if __name__ == "__main__":
         # print(check_sum(1000000)) -------test passes if using integer division
         # print(check_sums_up_to_n(13000))
     print(compute_pi(1000))
+
+    try: 
+        compute_pi(err/ 3)
+
+    except Exception as e:
+        print(e)
     

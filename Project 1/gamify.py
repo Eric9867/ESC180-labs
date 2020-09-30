@@ -1,11 +1,10 @@
 ##################################
-## TODO : 
+## TODO: 
 # bored_with_stars logic
 # (probably) separating perform_activity into multiple functions
 
 
 ##################################
-
 
 
 def initialize():
@@ -37,14 +36,12 @@ def initialize():
     
     last_finished = 120
 
-
 def star_can_be_taken(activity):
     '''
     Tests if the user has a star 
     '''
     global cur_star, cur_star_activity, bored_with_stars
-    return cur_star and cur_star_activity and not bored_with_stars
-
+    return cur_star and (cur_star_activity == activity) and not bored_with_stars
     
 def perform_activity(activity, duration):
     '''
@@ -59,7 +56,7 @@ def perform_activity(activity, duration):
 
     # If the user has a star, and are perform the correct activity reward them with 
     # 3 hed / min for the first 10 minutes of the activity. Remove the star after
-    if cur_star and cur_star_activity == activity:
+    if star_can_be_taken(activity):
         if duration >= 10:
             cur_hedons += 30
         else:
@@ -91,7 +88,7 @@ def perform_activity(activity, duration):
                 cur_health += duration
             else:
                 cur_health += (180 - last_activity_duration) * 2 + duration
-            
+            last_activity_duration += duration
 
         else:
             # tired : -2 hed / min
@@ -112,10 +109,11 @@ def perform_activity(activity, duration):
                 cur_health += duration * 3
             else:
                 cur_health += 360 + duration
+            last_activity_duration = duration
 
-        last_finished = 0
-        last_activity_duration = duration
         last_activity = "running"
+        last_finished = 0
+        
 
     elif activity == "textbooks":
         # Carrying textbooks always gives 2 health points per minute.
@@ -157,8 +155,8 @@ def offer_star(activity):
 
 def most_fun_activity_minute():
     '''
-    Returns the activity that, if performed for the next minute, would give the most hedons.
-    If user is tired than it is resting, else it is running. 
+    Returns the activity that, if performed for 
+    the next minute, would give the most hedons.
     '''
     global last_finished, bored_with_stars, cur_star, cur_star_activity
     if not bored_with_stars and cur_star:
@@ -169,8 +167,8 @@ def most_fun_activity_minute():
         return "running"
     
 ################################################################################
-#These functions are not required, but we recommend that you use them anyway
-#as helper functions
+# These functions are not required, but we recommend 
+# that you use them anyway as helper functions
 
 def get_effective_minutes_left_hedons(activity):
     '''
@@ -211,6 +209,8 @@ if __name__ == '__main__':
     perform_activity("running", 20)
     print(get_cur_health())            #210 = 150 + 20 * 3
     print(get_cur_hedons())            #-90 = -80 + 10 * (3-2) + 10 * (-2)
+    perform_activity("running", 20)
+    perform_activity("running", 20)
     perform_activity("running", 170)
     print(get_cur_health())            #700 = 210 + 160 * 3 + 10 * 1
     print(get_cur_hedons())            #-430 = -90 + 170 * (-2)
