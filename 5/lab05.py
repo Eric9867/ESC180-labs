@@ -51,10 +51,74 @@ def print_matrix_dim(M):
             raise TypeError
     return str(len(M)) + "x" + str(len(M[1]))
 
+def dot_product(v, u):
+    '''
+    Returns the dot product of vector v with vector u
+    '''
+    try:
+        product = 0
+        for i in range(len(v)):
+            product += v[i]*u[i]
+    except: # IndexError
+        return False
+    else:
+        return product
+
+def matrix_multiply(A, B):
+    # Verify that 
+    for row in A:
+        if len(row) != len(A[0]):
+            raise TypeError
+    for row in B:
+        if len(row) != len(B[0]):
+            raise TypeError
+
+    # Transpose B for more convenient value access
+    temp_matrix_B = B
+    B = [[0] * len(B)] * len(B[0])
+    for i in range(len(B)):
+        for j in range(len(B[0])):
+            B[i][j] = temp_matrix_B[j][i]
+
+    if len(A[0]) != len(B[0]):
+        raise ValueError    # Could also be an index error
+
+    # Given matrix (m x n)
+    # and matrix (n x p)
+    # Resulting matrix is (m x p)
+    C = []
+    for i in range(len(A)): 
+        C.append([0] * len(B))
+
+    for row_of_A in range(len(A)):
+        for column_of_B in range(len(B)):
+            # Entry i,j of resultant matrix C
+            C[row_of_A][column_of_B] = dot_product(A[row_of_A], B[column_of_B])
+    
+    # (optional) If it is a single column matrix, converts it to a simple list
+    for i in range(len(C)):
+        if len(C[i]) == 1:
+            C[i] = C[i][0]
+    return C
+
+
+
 if __name__ == "__main__":
     print("1. List 1 starts with list 2: ", list1_start_with_list2([1,2,3,4,5,6],[1,2,3,4,5,6,7]))
     print("2. List 2 in list 1: ", match_pattern([1,2,3,4,5,6,7,8,9,10,11],[5,6,7]))
     print("3. List0 repeats: ", repeats([0,1,2,3,4,5,6,7]))
     print("4. a) Matrix dimensions: ", print_matrix_dim([[1,2,3],[4,5,6],[7,8,9]]))
-    print("4. b)")
+    
+    print("4. b) matrix u by vector v")
+    v = [[1], 
+        [2], 
+        [3]]
+    u = [[1,2,5],
+        [6,4,1],
+        [1,4,2]]
+    for i in u:
+        print(i)
+    print()
+    print(v)
+    print(matrix_multiply(u, v))
     print("4. c)")
