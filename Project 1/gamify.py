@@ -45,8 +45,10 @@ def is_bored_with_stars():
     
     for time in cur_star_list:
         if cur_time - time >= 120:
-            cur_star_list.remove(time)
-        
+            #cur_star_list.remove(time)
+            while time in cur_star_list:
+                cur_star_list.remove(time)
+            
     if len(cur_star_list) >= 3:
         bored_with_stars = True
     
@@ -56,7 +58,7 @@ def star_can_be_taken(activity):
     '''
     global cur_star, cur_star_activity, bored_with_stars
    
-    is_bored_with_stars()
+    #is_bored_with_stars()
     return cur_star and (cur_star_activity == activity) and not bored_with_stars
     
 def perform_activity(activity, duration):
@@ -169,6 +171,7 @@ def offer_star(activity):
     cur_star = True
     cur_star_activity = activity
     cur_star_list.append(cur_time)
+    is_bored_with_stars()
 
 def most_fun_activity_minute():
     '''
@@ -212,14 +215,95 @@ def estimate_health_delta(activity, duration):
         
 if __name__ == '__main__':
     initialize()
-    perform_activity("textbooks", 50)
-    print(get_cur_health())         # 100 = 50 * 2
-    print(get_cur_hedons())         # -10 = 20 * 1 + 30 * (-1)
-    perform_activity("textbooks", 50)
-    print(get_cur_health())         # 200 = 100 + 50 * 2
-    print(get_cur_hedons())         # -110 = -10 + 50 * (-2)
-    perform_activity()
+    # offer_star("textbooks")
+    # perform_activity("textbooks", 80)
+    # print(get_cur_health())
+    # print(get_cur_hedons())
+    # perform_activity("running", 70)
+    # print(get_cur_health())
+    # print(get_cur_hedons())
+    # perform_activity("resting", 130)
+    # print(get_cur_health())
+    # print(get_cur_hedons())
+    # offer_star("textbooks")
+    # print(most_fun_activity_minute())
     
+    perform_activity("resting", 50)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    perform_activity("running", 20)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    offer_star("textbooks")
+    perform_activity("textbooks", 140)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    perform_activity("resting", 70)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    perform_activity("running", 80)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    offer_star("textbooks")
+    perform_activity("resting", 30)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    perform_activity("textbooks", 20)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    offer_star("textbooks")
+    offer_star("textbooks")
+    offer_star("textbooks")
+    perform_activity("textbooks", 70)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    print(most_fun_activity_minute())
+    perform_activity("resting", 50)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    perform_activity("textbooks", 50)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    perform_activity("running", 90)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    offer_star("textbooks")
+    offer_star("textbooks")
+    perform_activity("textbooks", 10)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    offer_star("running")
+    perform_activity("resting", 80)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    perform_activity("resting", 80)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    perform_activity("textbooks", 60)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    perform_activity("running", 140)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    perform_activity("resting", 70)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    print(most_fun_activity_minute())
+    perform_activity("textbooks", 70)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    print(most_fun_activity_minute())
+    perform_activity("resting", 60)
+    print(get_cur_health())
+    print(get_cur_hedons())
+    
+    # perform_activity("textbooks", 50)
+    # print(get_cur_health())         # 100 = 50 * 2
+    # print(get_cur_hedons())         # -10 = 20 * 1 + 30 * (-1)
+    # perform_activity("textbooks", 50)
+    # print(get_cur_health())         # 200 = 100 + 50 * 2
+    # print(get_cur_hedons())         # -110 = -10 + 50 * (-2)
+    # perform_activity()
     
     # offer_star("textbooks")
     # perform_activity("running", 60)
