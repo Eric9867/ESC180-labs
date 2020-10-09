@@ -51,7 +51,8 @@ def is_bored_with_stars():
     
 def star_can_be_taken(activity):
     '''
-    Tests if the user has a star 
+    Tests if the user has a star that can be
+    used for activity activity
     '''
     global cur_star, cur_star_activity, bored_with_stars
    

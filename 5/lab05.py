@@ -86,9 +86,13 @@ def matrix_multiply(A, B):
     # Given matrix (m x n)
     # and matrix (n x p)
     # Resulting matrix is (m x p)
-    C = []
-    for i in range(len(A)): 
-        C.append([0] * len(B))
+
+    C = [[None for i in range(len(B))] for j in range(len(A))]
+
+    # C = [[[0][:] * len(B])]*len(A)
+    #C = []
+    #for i in range(len(A)): 
+    #    C.append([0] * len(B))
 
     for row_of_A in range(len(A)):
         for column_of_B in range(len(B)):
