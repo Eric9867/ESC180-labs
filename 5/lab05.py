@@ -93,6 +93,9 @@ def matrix_multiply(A, B):
     #C = []
     #for i in range(len(A)): 
     #    C.append([0] * len(B))
+    for i in C:
+        for j in i:
+            j = None
 
     for row_of_A in range(len(A)):
         for column_of_B in range(len(B)):
@@ -173,4 +176,7 @@ if __name__ == "__main__":
     print("Results:\n", results, sep ="")
     results = np.matrix(mult_M1_M2(u,v))
     print("Results:\n", results, sep ="")    
+    results = np.matrix(mult_M1_M2(matrix1,matrix2))
+    print("Results:\n", results, sep ="")    
+
 
