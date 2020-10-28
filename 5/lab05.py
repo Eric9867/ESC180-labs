@@ -87,11 +87,12 @@ def matrix_multiply(A, B):
     # and matrix (n x p)
     # Resulting matrix is (m x p)
 
-    C = [[None for i in range(len(B))] for j in range(len(A))]
+    C = [[None] for i in range(len(B)) for j in range(len(A))]
 
     # C = [[[0][:] * len(B])]*len(A)
     #C = []
     #for i in range(len(A)): 
+
     #    C.append([0] * len(B))
 
     for row_of_A in range(len(A)):
@@ -126,3 +127,9 @@ if __name__ == "__main__":
     print(v)
     print(matrix_multiply(u, v))
     print("4. c)")
+
+    z = [[8 , 9 , 1],
+        [4 , 7 , 2],
+        [8 , 1 , 3]]
+
+    print(matrix_multiply(u, z))
