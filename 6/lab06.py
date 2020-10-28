@@ -6,7 +6,7 @@
    | X | 
 '''
 
-import random
+import random, copy
 
 
 def print_board_and_legend(board):
@@ -29,7 +29,7 @@ def make_empty_board():
 
 # Part (a):
 def board_coord(square_num):
-    return [(square_num -1)//3, square_num % 3 - 1]
+    return [(square_num -1)//3, (square_num-1) % 3]
 
 # Part (b):
 def put_in_board(board, mark, square_num):
@@ -50,7 +50,10 @@ def input_counter(board, comp = False):
     else:
         current_mark = 'O'
     while not check_free_square(square_num, board) and not comp:
-        square_num = int(input("Please enter coordinate (between  1 and 9) for {}: ".format(current_mark).upper()))
+        try:
+            square_num = int(input("Please enter coordinate (between  1 and 9) for {}: ".format(current_mark)))
+        except:
+            continue
     counter+=1
     return current_mark, square_num
 
@@ -69,20 +72,36 @@ def get_free_squares(board):
 # Part (b):
 def make_random_move(board, mark):
     free_tiles = get_free_squares(board)
-    rnd_tile = free_tiles[int(len(free_tiles))*random.random()]
+    rnd_tile = free_tiles[int(len(free_tiles)*random.random())]
     board[rnd_tile[0]][rnd_tile[1]] = mark
     return board
 
 # Part (c):
 def simple_comp_game(board):
     while len(get_free_squares(board)) != 0:
-        mark_pos = input_counter(board)
-        put_in_board(board, mark_pos[0], mark_pos[1])
+        mark_pos_player = input_counter(board)
+        put_in_board(board, mark_pos_player[0], mark_pos_player[1])
         print_board_and_legend(board)
+        player_win = is_win(board, mark_pos_player[0])
+
+        if player_win:
+            print("Player wins!")
+            break
+
+        if len(get_free_squares(board)) == 0:
+            print("Tie game.")
+            break
+
         input("Computer's move, press enter to continue...")
-        mark_pos = input_counter(board, True)
-        make_random_move(board,mark_pos[0])
+        mark_pos_comp = input_counter(board, True)
+        #make_random_move(board,mark_pos[0])
+        cpu_move(board, mark_pos_comp[0], mark_pos_player[0])
         print_board_and_legend(board)
+        comp_win = is_win(board, mark_pos_comp[0])
+
+        if comp_win:
+            print("Computer wins!")
+            break
 
 #3a
 def is_row_all_marks(board, row_i, mark):
@@ -108,8 +127,33 @@ def is_win(board, mark):
             return True
     return are_diag_all_marks(board, mark)
 
+#4a
+def win_con(board,mark):
+    options = get_free_squares(board)
+    test_board = copy.deepcopy(board)
+    for tile in options:
+        test_board[tile[0]][tile[1]] = mark
+        if is_win(test_board,mark):
+            return tile
+        else:
+            test_board[tile[0]][tile[1]] = ' '
+    return False
+
+def cpu_move(board, mark_cpu, mark_player):
+    win_tile = win_con(board, mark_cpu)
+    if win_tile:
+        board[win_tile[0]][win_tile[1]] = mark_cpu
+    else:
+        lose_tile = win_con(board, mark_player)
+        if lose_tile:
+            board[lose_tile[0]][lose_tile[1]] = mark_cpu
+        else:
+            make_random_move(board,mark_cpu)
+    return None
+    
 
 if __name__ == '__main__':
+    global counter
     counter = 0
     board = make_empty_board()
     print_board_and_legend(board)    
