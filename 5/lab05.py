@@ -94,6 +94,9 @@ def matrix_multiply(A, B):
     #for i in range(len(A)): 
 
     #    C.append([0] * len(B))
+    for i in C:
+        for j in i:
+            j = None
 
     for row_of_A in range(len(A)):
         for column_of_B in range(len(B)):
@@ -106,6 +109,24 @@ def matrix_multiply(A, B):
             C[i] = C[i][0]
     return C
 
+### Matrix Multiplication ###
+import numpy as np
+
+
+def mult_M1_M2(M1, M2):
+    ''' Return the matrix multiplication of an (m x n) & an (n x p) matrix '''
+    cur_ind = 0
+    if len(M1[0]) != len(M2):
+        raise IndexError("M1 column size != M2 row size [not (m x n) & (n x p) matrices]")
+
+    res_matrix = [[] for j in range(len(M1))]
+    for m in range(len(M1)):
+        for p in range(len(M2[0])):
+            cur_ind = 0
+            for n in range(len(M2)):
+                cur_ind += M1[m][n]*M2[n][p]
+            res_matrix[m].insert(p, cur_ind)
+    return res_matrix
 
 
 if __name__ == "__main__":
@@ -133,3 +154,35 @@ if __name__ == "__main__":
         [8 , 1 , 3]]
 
     print(matrix_multiply(u, z))
+    matrix1 =  [[2 ,1 ,0 ,7 ,4 ,1 ,5 ,0 ,6 ,9],
+                [4 ,8 ,6 ,7 ,0 ,5 ,7 ,8 ,3 ,7],
+                [2 ,7 ,9 ,6 ,5 ,0 ,1 ,6 ,8 ,2],
+                [2 ,2 ,1 ,0 ,3 ,5 ,0 ,0 ,6 ,0],
+                [2 ,4 ,2 ,8 ,7 ,1 ,2 ,8 ,5 ,8],
+                [4 ,2 ,3 ,8 ,5 ,1 ,7 ,0 ,8 ,3]]
+
+    matrix2 =  [[6 ,6 ,2 ,3],
+                [3 ,9 ,1 ,8],
+                [0 ,8 ,9 ,4],
+                [4 ,2 ,1 ,4],
+                [1 ,5 ,5 ,9],
+                [7 ,9 ,8 ,9],
+                [3 ,5 ,7 ,8],
+                [4 ,3 ,5 ,4],
+                [2 ,8 ,2 ,7],
+                [9 ,1 ,8 ,8]]
+    # np.matrix(matrix1)
+    # np.matrix(matrix2)
+
+    print("M1:\n", np.matrix(matrix1), "\n", sep = "")
+    print("M2:\n", np.matrix(matrix2), "\n", sep = "")
+
+    results = mult_M1_M2(matrix1, matrix2)
+    results = np.matrix(mult_M1_M2(matrix1, matrix2))
+    print("Results:\n", results, sep ="")
+    results = np.matrix(mult_M1_M2(u,v))
+    print("Results:\n", results, sep ="")    
+    results = np.matrix(mult_M1_M2(matrix1,matrix2))
+    print("Results:\n", results, sep ="")    
+
+
