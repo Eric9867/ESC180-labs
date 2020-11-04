@@ -1,5 +1,5 @@
 #Needed for array() and dot()
-from numpy import *
+from numpy import array,dot
 
 
 #Printing matrices using NumPy:
