@@ -1,4 +1,5 @@
-"""Gomoku starter code
+"""
+Gomoku starter code
 You should complete every incomplete function,
 and add more functions and variables as needed.
 
@@ -10,14 +11,72 @@ Author(s): Michael Guerzhoy with tests contributed by Siavash Kazemian.  Last mo
 """
 
 def is_empty(board):
-    pass
+    return all([all([square == ' ' for square in row]) for row in board])
     
     
 def is_bounded(board, y_end, x_end, length, d_y, d_x):
-    pass
+    bounded_before = False
+    bounded_after = False
+
+    try:
+        bounded_after = (board[y_end + d_y][x_end + d_x] != ' ')
+    except IndexError:
+        bounded_after = True
+    
+    bounded_before = (
+        (board[y_end - (length) * d_y][x_end - (length) * d_x] != ' ') or 
+        (y_end - (length) * d_y) < 0 or 
+        (x_end - (length) * d_x) < 0
+    )
+
+    
+    if bounded_before and bounded_after:
+        return 'CLOSED'
+    elif bounded_before or bounded_after:
+        return 'SEMIOPEN'
+    else: # essentially: not bounded_before and not bounded_after
+        return 'OPEN'
+    
+
+    
     
 def detect_row(board, col, y_start, x_start, length, d_y, d_x):
-    return open_seq_count, semi_open_seq_count
+    board_width = len(board[0]) # 8
+    board_height = len(board) # 8 
+    # the current "row" or sequence being analyzed
+    
+    # THIS ASSUMES YOUR LOOKING AT THE LONGEST ROW THAT FITS IN THE TABLE GIVEN THE PARAMETERS
+    # seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(min(board_height - y_start, board_width - x_start))]
+
+    # Instead, we specify the length.... why tho?
+    seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(length)]
+
+
+    #start_points = []
+    end_points = []
+    lengths = []
+    is_in_color_seq = False
+    cur_length = 0
+
+    for i in range(len(seq)):
+        if i == col:
+            cur_length += 1
+            is_in_color_seq = True
+        elif is_in_color_seq:
+            end_points.append((y_start + i * d_y, x_start + i * d_x))
+            lengths.append(cur_length)
+            cur_length = 0
+            is_in_color_seq = False
+
+    seq_count = {
+        'OPEN': 0,
+        'CLOSED': 0,
+        'SEMIOPEN': 0
+    }
+    for sub_seq in range(len(end_points)):
+        seq_count[is_bounded(board, *end_points[sub_seq], lengths[sub_seq], d_y, d_x)] += 1
+
+    return seq_count['OPEN'], seq_count['SEMIOPEN']
     
 def detect_rows(board, col, length):
     ####CHANGE ME
@@ -327,5 +386,16 @@ def some_tests():
   
             
 if __name__ == '__main__':
-    play_gomoku(8)
-    
+    #play_gomoku(8)
+    board = [
+        [' ', ' ', ' '],
+        [' ', 'w', ' '],
+        [' ', ' ', 'w']
+    ]
+    print((board, *(2,2), 2, 1, 1))
+    board = [
+        ['w', ' ', ' '],
+        ['w', 'w', ' '],
+        [' ', ' ', 'w']
+    ]
+    print(detect_row(board, 'w', 0, 0, 3, 1, 0))
