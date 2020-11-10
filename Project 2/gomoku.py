@@ -10,6 +10,9 @@ This is a placeholder that you should remove once you modify the function.
 Author(s): Michael Guerzhoy with tests contributed by Siavash Kazemian.  Last modified: Oct. 26, 2020
 """
 
+# FIND OUT IF IMPORTS ARE ALLOWED!!!
+import copy
+
 def is_empty(board):
     return all([all([square == ' ' for square in row]) for row in board])
     
@@ -92,6 +95,17 @@ def detect_rows(board, col, length):
     return open_seq_count, semi_open_seq_count
     
 def search_max(board):
+    max_score = 0
+    move_y, move_x = -1, -1
+  
+    for y in range(len(board)):
+        for x in range(len(board[y])):
+            tmp_board = copy.deepcopy(board)
+            cur_score = score(tmp_board[y][x])
+            if cur_score > max_score: 
+                move_y, move_x = y, x
+                max_score = score
+
     return move_y, move_x
     
 def score(board):
@@ -124,6 +138,10 @@ def score(board):
 
     
 def is_win(board):
+
+    #Check Tie
+    if all(all(square != ' ' for square in row) for row in board)):
+        return "Draw"
     pass
 
 
