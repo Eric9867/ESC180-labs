@@ -25,14 +25,12 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
         bounded_after = (board[y_end + d_y][x_end + d_x] != ' ')
     except IndexError:
         bounded_after = True
-    # I changed this slightly. I beleieve it should be  -(length+1) * d_{} instead of -(length) * d{} since isn't {}_end - length*d{} the first position of the sequence? {} = x or y
     bounded_before = (
-        (board[y_end - (length+1) * d_y][x_end - (length+1) * d_x] != ' ') or 
-        (y_end - (length+1) * d_y) < 0 or 
-        (x_end - (length+1) * d_x) < 0
+        (board[y_end - (length) * d_y][x_end - (length) * d_x] != ' ') or 
+        (y_end - (length) * d_y) < 0 or 
+        (x_end - (length) * d_x) < 0
     )
 
-    
     if bounded_before and bounded_after:
         return 'CLOSED'
     elif bounded_before or bounded_after:
@@ -41,18 +39,16 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
         return 'OPEN'
     
 
-    
-    
 def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     board_width = len(board[0]) # 8
     board_height = len(board) # 8 
     # the current "row" or sequence being analyzed
     
     # THIS ASSUMES YOUR LOOKING AT THE LONGEST ROW THAT FITS IN THE TABLE GIVEN THE PARAMETERS
-    # seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(min(board_height - y_start, board_width - x_start))]
+    seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(min(board_height - y_start * d_y, board_width - x_start * d_x))]
 
     # Instead, we specify the length.... why tho?
-    seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(length)]
+    # seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(length)]
 
 
     #start_points = []
@@ -62,11 +58,11 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     cur_length = 0
 
     for i in range(len(seq)):
-        if i == col:
+        if seq[i] == col:
             cur_length += 1
             is_in_color_seq = True
         elif is_in_color_seq:
-            end_points.append((y_start + i * d_y, x_start + i * d_x))
+            end_points.append((y_start + (i - 1) * d_y, x_start + (i - 1) * d_x))
             lengths.append(cur_length)
             cur_length = 0
             is_in_color_seq = False
@@ -88,7 +84,7 @@ def detect_rows(board, col, length):
 
     for inc in dy_dx:  
         for y in range(len(board) - inc[0]*length): 
-            for x in range(len(board[y]) - inc[1]*length):
+            for x in (range(len(board[y]) - inc[1]*length) if inc[1] >= 0 else range(len(board[y]) - length, 0, inc[1])):
                 open_seq_count += detect_row(board, col, y, x, length, inc[0], inc[1])[0]
                 semi_open_seq_count += detect_row(board, col, y, x, length, inc[0], inc[1])[1]
 
@@ -140,7 +136,7 @@ def score(board):
 def is_win(board):
 
     #Check Tie
-    if all(all(square != ' ' for square in row) for row in board)):
+    if all(all(square != ' ' for square in row) for row in board):
         return "Draw"
     pass
 
@@ -413,15 +409,21 @@ def some_tests():
             
 if __name__ == '__main__':
     #play_gomoku(8)
-    board = [
-        [' ', ' ', ' '],
-        [' ', 'w', ' '],
-        [' ', ' ', 'w']
-    ]
-    print((board, *(2,2), 2, 1, 1))
-    board = [
-        ['w', ' ', ' '],
-        ['w', 'w', ' '],
-        [' ', ' ', 'w']
-    ]
-    print(detect_row(board, 'w', 0, 0, 3, 1, 0))
+    # board = [
+    #     [' ', ' ', ' '],
+    #     [' ', 'w', ' '],
+    #     [' ', ' ', 'w']
+    # ]
+    # print((board, *(2,2), 2, 1, 1))
+    # board = [
+    #     ['w', ' ', ' '],
+    #     ['w', 'w', ' '],
+    #     [' ', ' ', 'w']
+    # ]
+    # print(detect_row(board, 'w', 0, 0, 3, 1, 1))
+
+    #some_tests()
+    test_is_empty()
+    test_is_bounded()
+    test_detect_row()
+    test_detect_rows()
