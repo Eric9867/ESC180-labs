@@ -69,9 +69,9 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
                 lengths.append(cur_length)
             cur_length = 0
             is_in_color_seq = False
-        if is_in_color_seq and cur_length == length:
-            end_points.append((y_start + (i - 1) * d_y, x_start + (i - 1) * d_x))
-            lengths.append(cur_length)
+    if is_in_color_seq and cur_length == length:
+        end_points.append((y_start + (i - 1) * d_y, x_start + (i - 1) * d_x))
+        lengths.append(cur_length)
 
     seq_count = {
         'OPEN': 0,
