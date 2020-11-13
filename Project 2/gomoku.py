@@ -25,11 +25,14 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
         bounded_after = (board[y_end + d_y][x_end + d_x] != ' ')
     except IndexError:
         bounded_after = True
-    bounded_before = (
-        (board[y_end - (length) * d_y][x_end - (length) * d_x] != ' ') or 
-        (y_end - (length) * d_y) < 0 or 
-        (x_end - (length) * d_x) < 0
-    )
+    try:
+        bounded_before = (
+            (board[y_end - (length) * d_y][x_end - (length) * d_x] != ' ') or 
+            (y_end - (length) * d_y) < 0 or 
+            (x_end - (length) * d_x) < 0
+        )
+    except IndexError:
+        bounded_before = True
 
     if bounded_before and bounded_after:
         return 'CLOSED'
@@ -45,12 +48,11 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     # the current "row" or sequence being analyzed
     
     # THIS ASSUMES YOUR LOOKING AT THE LONGEST ROW THAT FITS IN THE TABLE GIVEN THE PARAMETERS
-    seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(min(board_height - y_start * d_y, board_width - x_start * d_x))]
+    seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(min(board_height - y_start * d_y, board_width - x_start * d_x if d_x >= 0 else x_start + 1))]
 
     # Instead, we specify the length.... why tho?
     # seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(length)]
-
-
+    # print(seq, 'dy', d_y, 'dx', d_x, 'yst', y_start, 'xst', x_start)
     #start_points = []
     end_points = []
     lengths = []
@@ -62,10 +64,14 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
             cur_length += 1
             is_in_color_seq = True
         elif is_in_color_seq:
-            end_points.append((y_start + (i - 1) * d_y, x_start + (i - 1) * d_x))
-            lengths.append(cur_length)
+            if cur_length == length:
+                end_points.append((y_start + (i - 1) * d_y, x_start + (i - 1) * d_x))
+                lengths.append(cur_length)
             cur_length = 0
             is_in_color_seq = False
+        if is_in_color_seq and cur_length == length:
+            end_points.append((y_start + (i - 1) * d_y, x_start + (i - 1) * d_x))
+            lengths.append(cur_length)
 
     seq_count = {
         'OPEN': 0,
@@ -82,28 +88,70 @@ def detect_rows(board, col, length):
     dy_dx = [(0,1),(1,0),(1,1),(1,-1)]
     open_seq_count, semi_open_seq_count = 0, 0
 
-    for inc in dy_dx:  
-        for y in range(len(board) - inc[0]*length): 
-            for x in (range(len(board[y]) - inc[1]*length) if inc[1] >= 0 else range(len(board[y]) - length, 0, inc[1])):
-                open_seq_count += detect_row(board, col, y, x, length, inc[0], inc[1])[0]
-                semi_open_seq_count += detect_row(board, col, y, x, length, inc[0], inc[1])[1]
+    y = 0
+    for x in range(len(board[0])):
+        for inc in [(1,0), (1,1), (1,-1)]:
+            counts = detect_row(board, col, y, x, length, inc[0], inc[1])
+            open_seq_count += counts[0]
+            semi_open_seq_count +=  counts[1] 
+    x = 0
+    # x = 0, y = 0
+    counts = detect_row(board, col, y, x, length, 0, 1)
+    open_seq_count += counts[0]
+    semi_open_seq_count +=  counts[1]
+
+    for y in range(1, len(board)):
+        for inc in [(1,0), (1,1)]:
+            counts = detect_row(board, col, y, x, length, inc[0], inc[1])
+            open_seq_count += counts[0]
+            semi_open_seq_count += counts[1]
+
+    x = len(board[0]) - 1
+    for y in range(1, len(board)):
+        for inc in [(1,-1)]:
+            counts = detect_row(board, col, y, x, length, inc[0], inc[1])
+            open_seq_count += counts[0]
+            semi_open_seq_count += counts[1]
 
     return open_seq_count, semi_open_seq_count
     
+# def search_max(board):
+#     max_score = 0
+#     move_y, move_x = -1, -1
+  
+#     for y in range(len(board)):
+#         for x in range(len(board[y])):
+#             tmp_board = copy.deepcopy(board)
+#             cur_score = score(tmp_board[y][x])
+#             if cur_score > max_score: 
+#                 move_y, move_x = y, x
+#                 max_score = score
+
+#     return move_y, move_x
+
 def search_max(board):
+    print_board(board)
     max_score = 0
     move_y, move_x = -1, -1
   
     for y in range(len(board)):
         for x in range(len(board[y])):
-            tmp_board = copy.deepcopy(board)
-            cur_score = score(tmp_board[y][x])
+           
+            if board[y][x] == ' ':
+                board[y][x] = 'b'
+                print_board(board)
+                cur_score = score(board)
+                board[y][x] = ' '
+            else:
+                print_board(board)
+                cur_score = score(board)
+               
             if cur_score > max_score: 
                 move_y, move_x = y, x
-                max_score = score
+                max_score = cur_score
 
     return move_y, move_x
-    
+
 def score(board):
     MAX_SCORE = 100000
     
@@ -132,7 +180,7 @@ def score(board):
             10   * semi_open_b[3]                +  
             open_b[2] + semi_open_b[2] - open_w[2] - semi_open_w[2])
 
-    
+
 def is_win(board):
 
     #Check Tie
@@ -159,14 +207,13 @@ def print_board(board):
     s += (len(board[0])*2 + 1)*"*"
     
     print(s)
-    
+
 
 def make_empty_board(sz):
     board = []
     for i in range(sz):
         board.append([" "]*sz)
     return board
-                
 
 
 def analysis(board):
@@ -176,12 +223,8 @@ def analysis(board):
             open, semi_open = detect_rows(board, c, i);
             print("Open rows of length %d: %d" % (i, open))
             print("Semi-open rows of length %d: %d" % (i, semi_open))
-        
-    
-    
 
-        
-    
+
 def play_gomoku(board_size):
     board = make_empty_board(board_size)
     board_height = len(board)
@@ -260,6 +303,16 @@ def test_detect_row():
     else:
         print("TEST CASE for detect_row FAILED")
 
+def test_detect_row2():
+    board = make_empty_board(8)
+    x = 6; y = 5; d_x = -1; d_y = 1; length = 2
+    put_seq_on_board(board, y, x, d_y, d_x, length, "w")
+    print_board(board)
+    if detect_row(board, "w", y-1,x+1,length,d_y,d_x) == (0,1):
+        print("TEST CASE for detect_row PASSED")
+    else:
+        print("TEST CASE for detect_row FAILED")
+
 def test_detect_rows():
     board = make_empty_board(8)
     x = 5; y = 1; d_x = 0; d_y = 1; length = 3; col = 'w'
@@ -269,6 +322,17 @@ def test_detect_rows():
         print("TEST CASE for detect_rows PASSED")
     else:
         print("TEST CASE for detect_rows FAILED")
+
+def test_detect_rows2():
+    board = make_empty_board(8)
+    x = 6; y = 3; d_x = -1; d_y = 1; length = 3; col = 'w'
+    put_seq_on_board(board, y, x, d_y, d_x, length, "w")
+    print_board(board)
+    if detect_rows(board, col,length) == (1,0):
+        print("TEST CASE #2 for detect_rows PASSED")
+    else:
+        print("TEST CASE #2 for detect_rows FAILED")
+
 
 def test_search_max():
     board = make_empty_board(8)
@@ -281,6 +345,19 @@ def test_search_max():
         print("TEST CASE for search_max PASSED")
     else:
         print("TEST CASE for search_max FAILED")
+
+def test_score():
+    board = make_empty_board(8)
+    x = 7; y = 0; d_x = 1; d_y = 0; length = 1; col = 'b'
+    put_seq_on_board(board, y, x, d_y, d_x, length, col)
+    x = 5; y = 0; d_x = 0; d_y = 1; length = 4; col = 'w'
+    put_seq_on_board(board, y, x, d_y, d_x, length, col)
+    x = 6; y = 0; d_x = 0; d_y = 1; length = 4; col = 'b'
+    put_seq_on_board(board, y, x, d_y, d_x, length, col)
+    # x = 7; y = 0; d_x = 0; d_y = 1; length = 1; col = 'b'
+    # put_seq_on_board(board, y, x, d_y, d_x, length, col)
+    print_board(board)
+    print(score(board))    
 
 def easy_testset_for_main_functions():
     test_is_empty()
@@ -422,8 +499,12 @@ if __name__ == '__main__':
     # ]
     # print(detect_row(board, 'w', 0, 0, 3, 1, 1))
 
-    #some_tests()
-    test_is_empty()
-    test_is_bounded()
-    test_detect_row()
-    test_detect_rows()
+    # some_tests()
+    # test_is_empty()
+    # test_is_bounded()
+    # test_detect_row2()
+
+    
+    # test_detect_rows()
+    # test_detect_rows2()
+    easy_testset_for_main_functions()
