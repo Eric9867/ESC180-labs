@@ -41,8 +41,7 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
     else: # essentially: not bounded_before and not bounded_after
         return 'OPEN'
     
-
-def detect_row(board, col, y_start, x_start, length, d_y, d_x):
+def detect_row(board, col, y_start, x_start, length, d_y, d_x, check_win=False):
     board_width = len(board[0]) # 8
     board_height = len(board) # 8 
     # the current "row" or sequence being analyzed
@@ -81,9 +80,9 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x):
     for sub_seq in range(len(end_points)):
         seq_count[is_bounded(board, *end_points[sub_seq], lengths[sub_seq], d_y, d_x)] += 1
 
-    return seq_count['OPEN'], seq_count['SEMIOPEN']
-    
-def detect_rows(board, col, length):
+    return (max(val for val in seq_count.values()), 0) if check_win else (seq_count['OPEN'], seq_count['SEMIOPEN'])
+
+def detect_rows(board, col, length, check_win = False):
     ####CHANGE ME
     dy_dx = [(0,1),(1,0),(1,1),(1,-1)]
     open_seq_count, semi_open_seq_count = 0, 0
@@ -91,25 +90,25 @@ def detect_rows(board, col, length):
     y = 0
     for x in range(len(board[0])):
         for inc in [(1,0), (1,1), (1,-1)]:
-            counts = detect_row(board, col, y, x, length, inc[0], inc[1])
+            counts = detect_row(board, col, y, x, length, inc[0], inc[1], check_win)
             open_seq_count += counts[0]
             semi_open_seq_count +=  counts[1] 
     x = 0
     # x = 0, y = 0
-    counts = detect_row(board, col, y, x, length, 0, 1)
+    counts = detect_row(board, col, y, x, length, 0, 1, check_win)
     open_seq_count += counts[0]
     semi_open_seq_count +=  counts[1]
 
     for y in range(1, len(board)):
         for inc in [(1,0), (1,1)]:
-            counts = detect_row(board, col, y, x, length, inc[0], inc[1])
+            counts = detect_row(board, col, y, x, length, inc[0], inc[1], check_win)
             open_seq_count += counts[0]
             semi_open_seq_count += counts[1]
 
     x = len(board[0]) - 1
     for y in range(1, len(board)):
         for inc in [(1,-1)]:
-            counts = detect_row(board, col, y, x, length, inc[0], inc[1])
+            counts = detect_row(board, col, y, x, length, inc[0], inc[1], check_win)
             open_seq_count += counts[0]
             semi_open_seq_count += counts[1]
 
@@ -132,6 +131,7 @@ def detect_rows(board, col, length):
 def search_max(board):
     print_board(board)
     max_score = 0
+    cur_score = 0
     move_y, move_x = -1, -1
   
     for y in range(len(board)):
@@ -142,9 +142,9 @@ def search_max(board):
                 print_board(board)
                 cur_score = score(board)
                 board[y][x] = ' '
-            else:
-                print_board(board)
-                cur_score = score(board)
+            # else:
+            #     print_board(board)
+            #     cur_score = score(board)
                
             if cur_score > max_score: 
                 move_y, move_x = y, x
@@ -182,11 +182,16 @@ def score(board):
 
 
 def is_win(board):
-
-    #Check Tie
+    # Check win
+    if detect_rows(board, 'b', 5, True)[0] > 0:
+        return "Black won"
+    if detect_rows(board, 'w', 5, True)[0] > 0:
+        return "White won"
+    # Check Tie
     if all(all(square != ' ' for square in row) for row in board):
         return "Draw"
-    pass
+    else:
+        return "Continue playing"
 
 
 def print_board(board):
@@ -508,3 +513,4 @@ if __name__ == '__main__':
     # test_detect_rows()
     # test_detect_rows2()
     easy_testset_for_main_functions()
+    play_gomoku(8)
