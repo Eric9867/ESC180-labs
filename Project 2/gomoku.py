@@ -100,7 +100,7 @@ def detect_rows(board, col, length, check_win = False):
     semi_open_seq_count +=  counts[1]
 
     for y in range(1, len(board)):
-        for inc in [(1,0), (1,1)]:
+        for inc in [(0,1), (1,1)]:
             counts = detect_row(board, col, y, x, length, inc[0], inc[1], check_win)
             open_seq_count += counts[0]
             semi_open_seq_count += counts[1]
@@ -129,30 +129,27 @@ def detect_rows(board, col, length, check_win = False):
 #     return move_y, move_x
 
 def search_max(board):
-    #print_board(board)
-    max_score = 0
-    cur_score = 0
-    move_y, move_x = -1, -1
+    max_score = -100001
+    cur_score = None
+    move_y = None
+    move_x = None
   
     for y in range(len(board)):
         for x in range(len(board[y])):
-           
             if board[y][x] == ' ':
                 board[y][x] = 'b'
-                print_board(board)
                 cur_score = score(board)
                 board[y][x] = ' '
-                if (move_y, move_x) == (-1, -1) and board[-1][-1] != ' ':
-                    move_y, move_x = y, x # so it doesnt overwrite a position
-            # else:
-            #     print_board(board)
-            #     cur_score = score(board)
-               
-            if cur_score > max_score: 
-                move_y, move_x = y, x
-                max_score = cur_score
 
-    return move_y, move_x
+                if cur_score > max_score: 
+                    move_y, move_x = y, x
+                    max_score = cur_score
+    
+    # assert move_y != None and move_x != None
+    if move_y != None and move_x != None:
+        return move_y, move_x
+    else:
+        return 0, 0
 
 def score(board):
     MAX_SCORE = 100000
@@ -185,9 +182,9 @@ def score(board):
 
 def is_win(board):
     # Check win
-    print(detect_rows(board, 'b', 5, True)[0])
-    print(detect_rows(board, 'w', 5, True)[0])
-    print(all(all(square != ' ' for square in row) for row in board))
+    # print(detect_rows(board, 'b', 5, True)[0])
+    # print(detect_rows(board, 'w', 5, True)[0])
+    # print(all(all(square != ' ' for square in row) for row in board))
     if detect_rows(board, 'b', 5, True)[0] > 0:
         return "Black won"
     if detect_rows(board, 'w', 5, True)[0] > 0:
@@ -517,6 +514,6 @@ if __name__ == '__main__':
     
     # test_detect_rows()
     # test_detect_rows2()
-    easy_testset_for_main_functions()
-    play_gomoku(8)
+    # easy_testset_for_main_functions()
+    print('\n\n', play_gomoku(3), '!')
     #some_tests()
