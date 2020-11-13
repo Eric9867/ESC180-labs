@@ -129,7 +129,7 @@ def detect_rows(board, col, length, check_win = False):
 #     return move_y, move_x
 
 def search_max(board):
-    print_board(board)
+    #print_board(board)
     max_score = 0
     cur_score = 0
     move_y, move_x = -1, -1
@@ -142,6 +142,8 @@ def search_max(board):
                 print_board(board)
                 cur_score = score(board)
                 board[y][x] = ' '
+                if (move_y, move_x) == (-1, -1) and board[-1][-1] != ' ':
+                    move_y, move_x = y, x # so it doesnt overwrite a position
             # else:
             #     print_board(board)
             #     cur_score = score(board)
@@ -183,6 +185,9 @@ def score(board):
 
 def is_win(board):
     # Check win
+    print(detect_rows(board, 'b', 5, True)[0])
+    print(detect_rows(board, 'w', 5, True)[0])
+    print(all(all(square != ' ' for square in row) for row in board))
     if detect_rows(board, 'b', 5, True)[0] > 0:
         return "Black won"
     if detect_rows(board, 'w', 5, True)[0] > 0:
@@ -514,3 +519,4 @@ if __name__ == '__main__':
     # test_detect_rows2()
     easy_testset_for_main_functions()
     play_gomoku(8)
+    #some_tests()
