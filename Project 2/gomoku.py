@@ -10,9 +10,6 @@ This is a placeholder that you should remove once you modify the function.
 Author(s): Michael Guerzhoy with tests contributed by Siavash Kazemian.  Last modified: Oct. 26, 2020
 """
 
-# FIND OUT IF IMPORTS ARE ALLOWED!!!
-import copy
-
 def is_empty(board):
     return all([all([square == ' ' for square in row]) for row in board])
     
