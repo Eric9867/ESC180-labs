@@ -44,11 +44,12 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x, check_win=False):
     # the current "row" or sequence being analyzed
     
     # THIS ASSUMES YOUR LOOKING AT THE LONGEST ROW THAT FITS IN THE TABLE GIVEN THE PARAMETERS
+    # VVV SEEMS TO BE CORRECT
     seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(min(board_height - y_start * d_y, board_width - x_start * d_x if d_x >= 0 else x_start + 1))]
 
     # Instead, we specify the length.... why tho?
     # seq = [board[y_start + i * d_y][x_start + i * d_x] for i in range(length)]
-    # print(seq, 'dy', d_y, 'dx', d_x, 'yst', y_start, 'xst', x_start)
+    #print(seq, 'dy', d_y, 'dx', d_x, 'yst', y_start, 'xst', x_start)
     #start_points = []
     end_points = []
     lengths = []
@@ -65,8 +66,11 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x, check_win=False):
                 lengths.append(cur_length)
             cur_length = 0
             is_in_color_seq = False
-    if is_in_color_seq and cur_length == length:
-        end_points.append((y_start + (i - 1) * d_y, x_start + (i - 1) * d_x))
+    if is_in_color_seq and cur_length == length and seq[-1] == col:
+        end_points.append((y_start + (i) * d_y, x_start + (i) * d_x))
+        lengths.append(cur_length)
+    if is_in_color_seq and cur_length == length and seq[-1] != col:
+        end_points.append((y_start + (i-1) * d_y, x_start + (i-1) * d_x))
         lengths.append(cur_length)
 
     seq_count = {
@@ -88,6 +92,7 @@ def detect_rows(board, col, length, check_win = False):
     for x in range(len(board[0])):
         for inc in [(1,0), (1,1), (1,-1)]:
             counts = detect_row(board, col, y, x, length, inc[0], inc[1], check_win)
+            #print(counts)
             open_seq_count += counts[0]
             semi_open_seq_count +=  counts[1] 
     x = 0
@@ -99,6 +104,7 @@ def detect_rows(board, col, length, check_win = False):
     for y in range(1, len(board)):
         for inc in [(0,1), (1,1)]:
             counts = detect_row(board, col, y, x, length, inc[0], inc[1], check_win)
+            #print(counts)
             open_seq_count += counts[0]
             semi_open_seq_count += counts[1]
 
@@ -106,6 +112,7 @@ def detect_rows(board, col, length, check_win = False):
     for y in range(1, len(board)):
         for inc in [(1,-1)]:
             counts = detect_row(board, col, y, x, length, inc[0], inc[1], check_win)
+            #print(counts)
             open_seq_count += counts[0]
             semi_open_seq_count += counts[1]
 
@@ -512,5 +519,5 @@ if __name__ == '__main__':
     # test_detect_rows()
     # test_detect_rows2()
     # easy_testset_for_main_functions()
-    print('\n\n', play_gomoku(3), '!')
+    print('\n\n', play_gomoku(8), '!')
     #some_tests()
