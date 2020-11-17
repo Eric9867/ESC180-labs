@@ -19,7 +19,10 @@ def is_bounded(board, y_end, x_end, length, d_y, d_x):
     bounded_after = False
 
     try:
-        bounded_after = (board[y_end + d_y][x_end + d_x] != ' ')
+        if x_end + d_x == -1:
+            bounded_after = True
+        else:
+            bounded_after = (board[y_end + d_y][x_end + d_x] != ' ')
     except IndexError:
         bounded_after = True
     try:
@@ -67,10 +70,10 @@ def detect_row(board, col, y_start, x_start, length, d_y, d_x, check_win=False):
             cur_length = 0
             is_in_color_seq = False
     if is_in_color_seq and cur_length == length and seq[-1] == col:
-        end_points.append((y_start + (i) * d_y, x_start + (i) * d_x))
+        end_points.append((y_start + (len(seq)-1) * d_y, x_start + (len(seq)-1) * d_x))
         lengths.append(cur_length)
     if is_in_color_seq and cur_length == length and seq[-1] != col:
-        end_points.append((y_start + (i-1) * d_y, x_start + (i-1) * d_x))
+        end_points.append((y_start + (len(seq)-2) * d_y, x_start + (len(seq)-2) * d_x))
         lengths.append(cur_length)
 
     seq_count = {
@@ -333,17 +336,6 @@ def test_detect_rows():
         print("TEST CASE for detect_rows PASSED")
     else:
         print("TEST CASE for detect_rows FAILED")
-
-def test_detect_rows2():
-    board = make_empty_board(8)
-    x = 6; y = 3; d_x = -1; d_y = 1; length = 3; col = 'w'
-    put_seq_on_board(board, y, x, d_y, d_x, length, "w")
-    print_board(board)
-    if detect_rows(board, col,length) == (1,0):
-        print("TEST CASE #2 for detect_rows PASSED")
-    else:
-        print("TEST CASE #2 for detect_rows FAILED")
-
 
 def test_search_max():
     board = make_empty_board(8)
