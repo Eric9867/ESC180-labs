@@ -124,7 +124,7 @@ if __name__ == "__main__":
     dict_to_str({1:2, 0:3, 10:5})
     print(num_vowels('dictionary'))
     
-    # print(readability_grade_lvl('8\\moby_dick.txt'))
+    print(readability_grade_lvl('8\\moby_dick.txt'))
     
     # word_phones = word_phones_dict()
     phones_cat = phone_cat_dict()
