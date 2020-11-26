@@ -131,13 +131,40 @@ def num_results(search_term):
     index_val = page.find(string)
 
     res = page[index_val + len(string) : index_val + len(string)+50].split()[0]
-    print(res, "results") 
+    #print(res, "results") 
+    return res
 
-    # soup = BeautifulSoup(page, "html.parser")
-    # value = soup.find("input", {"name":"form1"}.get("Results"))
+def choose_variant(variants):
+    variant_dict = {}
+    ties ={}
+    max_res = 0
+
+    for variant in variants:
+        num_res_str = num_results(variant) #.split(" ")[0]
+        num_res = float(num_res_str.replace(',',''))
+        print(variant, num_res_str)
+
+        if num_res not in variant_dict:
+            variant_dict[num_res] = variant
+        else:
+            ties[variant] = num_res
+            ties[variant_dict[num_res]] = num_res
+
+        if max_res < num_res:
+            max_res = num_res    
+
+    if variant_dict[max_res] not in ties:
+        return variant_dict[max_res], max_res
+    # if there is a tie for max_res, return all elements that have max_res search results
+    else:
+        keys = []
+        for key, value in ties.items():
+            if value == max_res:
+                keys.append(key)
+        return keys, max_res
 
 if __name__ == "__main__":
-    print("\n======================================================================================================\nPROBLEM 1 TESTS")
+    # print("\n======================================================================================================\nPROBLEM 1 TESTS")
     # word_list = file_word_list('9\\Pride_and_Prejudice.txt')
     # print(len(word_list))
     # word_counts = word_frequency(word_list)
@@ -147,5 +174,14 @@ if __name__ == "__main__":
     # print("\n======================================================================================================\nPROBLE 2 TESTS")
     # bold_word('9\\Hello_World - Copy.html', 'ever')    
     # search_eng_sci('9\\Hello_World - Copy.html')    
-    # print("\n======================================================================================================\nPROBLEM 3 TESTS")
-    num_results("flathead screwdriver")
+    print("\n======================================================================================================\nPROBLEM 3 TESTS")
+    print(num_results("flathead screwdriver"), "results")
+    variants1 = ["flathead screwdriver","flat head screw driver", "flat-head screwdriver", "flat-head screw-driver", "flat-head-screw-driver"]
+    variants2 = ["five-year anniversary", "fifth anniversary"]
+    variants3 = ["top ranked schools uoft", "top ranked schools waterloo"]
+    #print(choose_variant(variants1))
+    print(choose_variant(variants2))
+    print(choose_variant(variants3))
+
+    for variant in variants1:
+        print(variant, num_results(variant), "results")
