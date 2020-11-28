@@ -1,5 +1,4 @@
 import urllib.request
-#import BeautifulSoup
 
 #####
 # Problem 1
@@ -142,7 +141,7 @@ def choose_variant(variants):
     for variant in variants:
         num_res_str = num_results(variant) #.split(" ")[0]
         num_res = float(num_res_str.replace(',',''))
-        print(variant, num_res_str)
+        #print(variant, num_res_str)
 
         if num_res not in variant_dict:
             variant_dict[num_res] = variant
@@ -165,23 +164,23 @@ def choose_variant(variants):
 
 if __name__ == "__main__":
     # print("\n======================================================================================================\nPROBLEM 1 TESTS")
-    # word_list = file_word_list('9\\Pride_and_Prejudice.txt')
+    # word_list = file_word_list('C:\\Users\\halil\\Documents\\GitHub\\ESC180-labs\\9\\Pride_and_Prejudice.txt')
     # print(len(word_list))
     # word_counts = word_frequency(word_list)
     # print(word_counts)
     
     # print("top ten words:", inv_freq(word_counts))
-    # print("\n======================================================================================================\nPROBLE 2 TESTS")
-    # bold_word('9\\Hello_World - Copy.html', 'ever')    
-    # search_eng_sci('9\\Hello_World - Copy.html')    
-    print("\n======================================================================================================\nPROBLEM 3 TESTS")
-    print(num_results("flathead screwdriver"), "results")
-    variants1 = ["flathead screwdriver","flat head screw driver", "flat-head screwdriver", "flat-head screw-driver", "flat-head-screw-driver"]
-    variants2 = ["five-year anniversary", "fifth anniversary"]
-    variants3 = ["top ranked schools uoft", "top ranked schools waterloo"]
-    #print(choose_variant(variants1))
-    print(choose_variant(variants2))
-    print(choose_variant(variants3))
+    print("\n======================================================================================================\nPROBLE 2 TESTS")
+    bold_word('C:\\Users\\halil\\Documents\\GitHub\\ESC180-labs\\9\\Hello_World.html', 'ever')    
+    search_eng_sci('C:\\Users\\halil\\Documents\\GitHub\\ESC180-labs\\9\\Hello_World.html')    
+    # print("\n======================================================================================================\nPROBLEM 3 TESTS")
+    # print(num_results("flathead screwdriver"), "results")
+    # variants1 = ["flathead screwdriver","flat head screw driver", "flat-head screwdriver", "flat-head screw-driver", "flat-head-screw-driver"]
+    # variants2 = ["five-year anniversary", "fifth anniversary"]
+    # variants3 = ["top ranked schools uoft", "top ranked schools waterloo"]
+    # #print(choose_variant(variants1))
+    # print(choose_variant(variants2))
+    # print(choose_variant(variants3))
 
-    for variant in variants1:
-        print(variant, num_results(variant), "results")
+    # for variant in variants1:
+    #     print(variant, num_results(variant), "results")
