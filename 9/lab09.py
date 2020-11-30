@@ -97,9 +97,9 @@ def search_eng_sci(path):
     url = 'https://ca.search.yahoo.com/search;_ylt=AwrJ6y6Yu75f9F4ALFrqFAx.;_ylc=X1MDMjExNDcyMTAwMgRfcgMyBGZyAwRncHJpZAN5X3BXRm5kLlNneUM1TWtseVMyWTFBBG5fcnNsdAMwBG5fc3VnZwM5BG9yaWdpbgNjYS5zZWFyY2gueWFob28uY29tBHBvcwMwBHBxc3RyAwRwcXN0cmwDBHFzdHJsAzIxBHF1ZXJ5A2VuZ2luZWVyaW5nJTIwc2NpZW5jZQR0X3N0bXADMTYwNjMzNTM4OQ--?fr2=sb-top-ca.search&p=engineering+science&fr=sfp&iscqry='
     file = open(path, 'r+')
     file_lines = file.readlines()
-    
+    # print(file_lines)
     for i in range(len(file_lines)-1,0,-1):
-        if file_lines[i] == '<p><a href="' +url+ '">Engineering Science</p>':
+        if file_lines[i] == '<p><a href="' +url+ '">Engineering Science</p>\n':
             break
         elif file_lines[i] == '\n':
             file_lines[i] = '<p><a href="' +url+ '">Engineering Science</p>\n'
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     
     # print("top ten words:", inv_freq(word_counts))
     # print("\n======================================================================================================\nPROBLE 2 TESTS")
-    # bold_word('9\\Hello_World - Copy.html', 'ever')    
-    # search_eng_sci('9\\Hello_World - Copy.html')    
+    bold_word('9\\Hello_World - Copy.html', 'ever')    
+    search_eng_sci('9\\Hello_World - Copy.html')    
     # print("\n======================================================================================================\nPROBLEM 3 TESTS")
     num_results("flathead screwdriver")
