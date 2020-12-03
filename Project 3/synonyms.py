@@ -125,7 +125,7 @@ def build_semantic_descriptors_from_files(filenames):
         text = f.read().lower()
         f.close()
         text = text.replace("!", ".").replace("?", ".")
-        text = text.replace(","," ").replace("-", " ").replace("--", " ").replace(":", " ").replace(";", " ").replace("\n", ".").replace("“"," ").replace("”"," ").replace("  ", " ").replace("  ", " ")
+        text = text.replace(","," ").replace("-", " ").replace("--", " ").replace(":", " ").replace(";", " ").replace("\n", " ").replace("“"," ").replace("”"," ").replace("  ", " ").replace("  ", " ")
         sentence_split = text.split(".")
         for i in range(len(sentence_split)):
             sentence_split[i] = sentence_split[i].split(" ")
@@ -194,7 +194,7 @@ if __name__ == "__main__":
     end_time = time.time()
     dt = end_time - start_time
     
-    print(semantic_dict)
+    #print(semantic_dict)
     print()
     print("Percentage:", run_similarity_test('test.txt', semantic_dict, cosine_similarity))
     print(dt)
