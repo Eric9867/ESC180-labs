@@ -47,18 +47,35 @@ def zigzag1(L):
     #print('\n',len(L))
 
 # PROBLEM 5
-def simple_is_balanced(a):
-
-    pass
+def simple_is_balanced(string):
+    '''
+    Returns True iff parentheses are balanced 
+    '''
+    # replace all characters other than '(' and ')'
+    string = ''.join(filter(lambda s: s == '(' or s == ')', string))
+    
+    if len(string) == 0:
+        return True
+    
+    i_par = string.find('()')
+    if i_par == -1:
+        return False
+    else:
+        string = string[:i_par] + string[i_par + 2:]
+        return simple_is_balanced(string)
 
 if __name__ == "__main__":
-    print(power(9, 10))
-    L1 = [1,2,3,4,5,6]
-    L2 = [9,8,7,6,5,4]
-    L1 = interleave(L1,L2)
-    print(L1)
-    print(reverse_rec(L1))
+    # print(power(9, 10))
+    # L1 = [1,2,3,4,5,6]
+    # L2 = [9,8,7,6,5,4]
+    # L1 = interleave(L1,L2)
+    # print(L1)
+    # print(reverse_rec(L1))
 
-    zigzag(L1)
-    print("")
-    zigzag1(L1)
+    # zigzag(L1)
+    # print("")
+    # zigzag1(L1)
+    # print()
+    string = '(((asdfqaq())()))()'
+    print(''.join(filter(lambda s: s in '()', string)))
+    print(simple_is_balanced(string))
