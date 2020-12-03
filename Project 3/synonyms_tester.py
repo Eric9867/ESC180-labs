@@ -14,7 +14,6 @@ FORMAT = 'utf-8'
 HOST_IP = '172.105.7.203' #hackers. Challenge accepted aight?
 
 class Network:
-
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = HOST_IP 
@@ -31,7 +30,12 @@ class Network:
         try:
             #print(function +":" + str(data))
             self.client.send(str.encode(function +":" + str(data)))
-            msg_length = int(self.client.recv(2048).decode(FORMAT))
+            while(True):
+                try:    
+                    msg_length = int(self.client.recv(2048).decode(FORMAT))
+                    break
+                except:
+                    continue
             #print("MSG LENGTH: ", msg_length)
             temp = ""
             while(len(temp) < msg_length):

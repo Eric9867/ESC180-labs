@@ -125,7 +125,7 @@ def build_semantic_descriptors_from_files(filenames):
         text = f.read().lower()
         f.close()
         text = text.replace("!", ".").replace("?", ".")
-        text = text.replace(","," ").replace("-", " ").replace("--", " ").replace(":", " ").replace(";", " ").replace("\n", ".").replace("  ", " ")
+        text = text.replace(","," ").replace("-", " ").replace("--", " ").replace(":", " ").replace(";", " ").replace("\n", ".").replace("“"," ").replace("”"," ").replace("  ", " ").replace("  ", " ")
         sentence_split = text.split(".")
         for i in range(len(sentence_split)):
             sentence_split[i] = sentence_split[i].split(" ")
@@ -148,9 +148,9 @@ def build_semantic_descriptors_from_files(filenames):
 
 
 def most_similar_word(word, choices, semantic_descriptors, similarity_fn):
-    similarity_score = [similarity_fn(semantic_descriptors[word][choice]) for choice in choices]
-    i_max = similarity_score.index(max(similarity_score))
-    return choices[i_max]
+    similarity_score = [similarity_fn(semantic_descriptors[word],semantic_descriptors[choice]) for choice in choices]
+    i_max = similarity_score.index(max(similarity_score)) # Will this return the element that appears first in case of a Tie?
+    return choices[i_max]                                 # Also need to add a condition such that if the semantic similarity cannot be computed the similarity must be -1.
 
 
 def run_similarity_test(filename, semantic_descriptors, similarity_fn):
@@ -165,10 +165,10 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
     print(lines)
     #['draw paint walk paint\n', 'duty task task example\n', 'earnest serious seri...s amusing\n', 'picture painting pai...ing chair\n', 'vexed annoyed amused annoyed\n', 'watch see hear see\n', 'tidy clean mess clean\n', 'youthful young young complex\n', 'strike beat beat complain\n', 'tearful crying frown...ng crying\n', 'lonely alone alone together\n', 'ardent keen keen wise\n', 'thief robber robber postman\n', 'authentic genuine ge...ine false\n', ...]
     for i in range(len(lines)):
-        lines[i] = lines[i].replace('\n').split()     # Default space
+        lines[i] = lines[i].replace('\n', "").split(" ")     # Default space
     score = 0
     for question in lines:
-        if question[1] == most_similar_word(question[0], question[2:], semantic_descriptors, cosine_similarity):
+        if question[1] == most_similar_word(question[0], question[2:], semantic_descriptors, similarity_fn):
               score += 1
     return 100 * score / len(lines) 
     
@@ -196,6 +196,6 @@ if __name__ == "__main__":
     
     print(semantic_dict)
     print()
-    print(run_similarity_test('test.txt', semantic_dict, cosine_similarity))
+    print("Percentage:", run_similarity_test('test.txt', semantic_dict, cosine_similarity))
     print(dt)
     
