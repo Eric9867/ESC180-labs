@@ -4,7 +4,7 @@ Author: Michael Guerzhoy. Last modified: Nov. 14, 2016.
 '''
 
 import math
-import time
+# import time
 
 def norm(vec):
     '''Return the norm of a vector stored as a dictionary,
@@ -62,7 +62,7 @@ def build_semantic_descriptors_from_files(filenames):
         text = f.read().lower()
         f.close()
         text = text.replace("!", ".").replace("?", ".")
-        text = text.replace(","," ").replace("-", " ").replace("--", " ").replace(":", " ").replace(";", " ").replace("\n", " ").replace("“"," ").replace("”"," ").replace("  ", " ").replace("  ", " ")
+        text = text.replace(","," ").replace("-", " ").replace("--", " ").replace(":", " ").replace(";", " ").replace("\n", " ").replace("â€œ"," ").replace("â€"," ").replace("  ", " ").replace("  ", " ")
         sentence_split = text.split(".")
         for i in range(len(sentence_split)):
             sentence_split[i] = sentence_split[i].split(" ")
@@ -105,32 +105,32 @@ def run_similarity_test(filename, semantic_descriptors, similarity_fn):
     return 100 * score / len(lines) 
     
 
-if __name__ == "__main__":
-    # sentences = [
-    #     ["i", "am", "a", "sick", "man"],
-    #     ["i", "am", "a", "spiteful", "man"],
-    #     ["i", "am", "an", "unattractive", "man"],
-    #     ["i", "believe", "my", "liver", "is", "diseased"],
-    #     ["however", "i", "know", "nothing", "at", "all", "about", "my",
-    #         "disease", "and", "do", "not", "know", "for", "certain", "what", "ails", "me"]
-    # ]
+# if __name__ == "__main__":
+#     # sentences = [
+#     #     ["i", "am", "a", "sick", "man"],
+#     #     ["i", "am", "a", "spiteful", "man"],
+#     #     ["i", "am", "an", "unattractive", "man"],
+#     #     ["i", "believe", "my", "liver", "is", "diseased"],
+#     #     ["however", "i", "know", "nothing", "at", "all", "about", "my",
+#     #         "disease", "and", "do", "not", "know", "for", "certain", "what", "ails", "me"]
+#     # ]
     
-    # print(cosine_similarity({"a": 1, "b": 2, "c": 3}, {"b": 4, "c": 5, "d": 6}))
-    # print(build_semantic_descriptors(sentences)['man'])
-    # print(build_semantic_descriptors(sentences)['liver'])
-    # build_semantic_descriptors_from_files(['sample_sentences.txt'])
+#     # print(cosine_similarity({"a": 1, "b": 2, "c": 3}, {"b": 4, "c": 5, "d": 6}))
+#     # print(build_semantic_descriptors(sentences)['man'])
+#     # print(build_semantic_descriptors(sentences)['liver'])
+#     # build_semantic_descriptors_from_files(['sample_sentences.txt'])
     
-    filenames = ['war_and_peace.txt', 'swanns_way.txt']
-    start_time = time.time()
-    semantic_dict = build_semantic_descriptors_from_files(filenames)
-    end_time = time.time()
-    dt = end_time - start_time
+#     filenames = ['war_and_peace.txt', 'swanns_way.txt']
+#     start_time = time.time()
+#     semantic_dict = build_semantic_descriptors_from_files(filenames)
+#     end_time = time.time()
+#     dt = end_time - start_time
     
-    # for key, val in semantic_dict.items():
-    #     print(key, ':' val)
+#     # for key, val in semantic_dict.items():
+#     #     print(key, ':' val)
     
-    #print(semantic_dict)
-    print('###')
-    print("Percentage:", run_similarity_test('test.txt', semantic_dict, cosine_similarity))
-    print('Time:', dt)
+#     #print(semantic_dict)
+#     print('###')
+#     print("Percentage:", run_similarity_test('test.txt', semantic_dict, cosine_similarity))
+#     print('Time:', dt)
     

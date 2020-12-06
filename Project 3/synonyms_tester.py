@@ -14,6 +14,7 @@ FORMAT = 'utf-8'
 HOST_IP = '172.105.7.203' #hackers. Challenge accepted aight?
 
 class Network:
+
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = HOST_IP 
@@ -32,7 +33,7 @@ class Network:
             self.client.send(str.encode(function +":" + str(data)))
             while(True):
                 try:    
-                    msg_length = int(self.client.recv(2048).decode(FORMAT))
+                    msg_length = int(self.client.recv(4).decode(FORMAT))
                     break
                 except:
                     continue
@@ -150,13 +151,14 @@ class client():
         if(good):
             print("ALL GOOD!")
         else:
-            print("Here's the sentences:")
-            print(sentences)
-            print("Here's Mrmandarin's dict:")
-            print(mandarin_dict)
-            print('\n')
-            print("Here's YOUR dict:")
-            print(user_dict)
+            print("FAIL")
+        print("Here's the sentences:")
+        print(sentences)
+        print("Here's Mrmandarin's dict:")
+        print(mandarin_dict==user_dict)
+        print('\n')
+        print("Here's YOUR dict:")
+        #print(user_dict)
         return good
 
     def continuous_check(self):
@@ -216,6 +218,7 @@ class client():
             f.write(get_tests)
             f.close()
             result = synonyms.run_similarity_test("sample_test.txt", synonyms.build_semantic_descriptors_from_files(["sample_case.txt"]), synonyms.cosine_similarity)
+                
             if(int(result) != 100):
                 print("HMMM SOMETHING SEEMS TO BE OFF")
                 print("Can't really pinpoint why tbh but I'll provide you with the debugging info tho...")
